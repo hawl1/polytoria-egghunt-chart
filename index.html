@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Bar Chart Example</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <canvas id="myChart"></canvas>
+
+  <script>
+
+    // this is bad, but less http requests made to the api so :shrug:
+    let dataArr = [
+      {
+        "name": "Mystical Void Egg",
+        "id": 32358
+      },
+      {
+        "name": "Art Egg",
+        "id": 32396
+      },
+      {
+        "name": "Teggpot",
+        "id": 32397
+      },
+      {
+        "name": "Rabbit Egg",
+        "id": 32317
+      },
+      {
+        "name": "Bright Egg",
+        "id": 32318
+      },
+      {
+        "name": "Plain White Egg",
+        "id": 32309
+      },
+      {
+        "name": "Egg of Flooding",
+        "id": 32331
+      },
+      {
+        "name": "Yellow Decorated Egg",
+        "id": 32322
+      },
+      {
+        "name": "Pharaoh Egg",
+        "id": 32319
+      },
+      {
+        "name": "Blue Decorated Egg",
+        "id": 32323
+      },
+      {
+        "name": "Red Decorated Egg",
+        "id": 32320
+      },
+      {
+        "name": "Familiar Geometric Egg",
+        "id": 32316
+      },
+      {
+        "name": "Brown Egg of Brown Pigmentation",
+        "id": 32391
+      },
+      {
+        "name": "Cobra Egg",
+        "id": 32354
+      },
+      {
+        "name": "Pink Egg of Light Pink Pigmentation",
+        "id": 32386
+      },
+      {
+        "name": "Webbed Egg",
+        "id": 32388
+      },
+      {
+        "name": "Green Decorated Egg",
+        "id": 32321
+      },
+      {
+        "name": "Vulture Egg",
+        "id": 32392
+      },
+      {
+        "name": "Egg of Division",
+        "id": 32855
+      },
+      {
+        "name": "Green Applegg Of Appling Apples",
+        "id": 32314
+      },
+      {
+        "name": "Patterned Egg Of Regularity",
+        "id": 32390
+      },
+      {
+        "name": "Plain Brown Egg",
+        "id": 32310
+      },
+      {
+        "name": "Golden Egg",
+        "id": 32312
+      },
+      {
+        "name": "Pearl Egg",
+        "id": 32393
+      },
+      {
+        "name": "Polytorian Head Egg",
+        "id": 32315
+      },
+      {
+        "name": "Striped Egg Of Normality",
+        "id": 32389
+      },
+      {
+        "name": "Multi-Coloured Egg Of Sky",
+        "id": 32387
+      },
+      {
+        "name": "Ruby Egg",
+        "id": 32311
+      },
+      {
+        "name": "Lapis Lazuli Egg",
+        "id": 32313
+      },
+      {
+        "name": "Webbed Egg",
+        "id": 32388
+      }
+    ];
+
+    // pro promise.all moment
+    Promise.all(dataArr.map(item => fetch(`https://api.polytoria.com/v1/store/${item.id}/owners?limit=1`)
+      .then(response => response.json())
+      .then(res => {
+        item.total = res.total;
+      })))
+      .then(() => {
+        dataArr.sort((a, b) => b.total - a.total);
+
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: dataArr.map(d => d.name),
+            datasets: [{
+              label: 'Number of Eggs Found',
+              data: dataArr.map(d => d.total),
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+            }]
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      });
+  </script>
+</body>
+
+</html>
